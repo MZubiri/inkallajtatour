@@ -9,7 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 // MySQL
 var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseMySql(connStr, ServerVersion.AutoDetect(connStr)));
+    opt.UseMySql(connStr, new MySqlServerVersion(new Version(8, 0, 36)), mySqlOpt =>
+        mySqlOpt.EnableRetryOnFailure(
+            maxRetryCount: 10,
+            maxRetryDelay: TimeSpan.FromSeconds(5),
+            errorNumbersToAdd: null)));
 
 // JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -66,7 +70,22 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await db.Database.EnsureCreatedAsync();
+    var retries = 10;
+    while (retries > 0)
+    {
+        try
+        {
+            await db.Database.EnsureCreatedAsync();
+            break;
+        }
+        catch (Exception ex)
+        {
+            retries--;
+            if (retries == 0) throw;
+            Console.WriteLine($"Esperando a que MySQL esté listo... ({retries} intentos restantes): {ex.Message}");
+            await Task.Delay(3000);
+        }
+    }
 
     var toursToUpdate = new Dictionary<int, (string ImageUrl, string GalleryImages)>
     {

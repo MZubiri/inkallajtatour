@@ -10,8 +10,8 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-inkallajta_pass}
     volumes:
       - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
+    expose:
+      - 3306
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -36,8 +36,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "5050:5050"
+    expose:
+      - 5050
 
   frontend:
     build:
@@ -47,8 +47,8 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-    ports:
-      - "80:80"
+    expose:
+      - 80
 
 volumes:
   mysql_data:
