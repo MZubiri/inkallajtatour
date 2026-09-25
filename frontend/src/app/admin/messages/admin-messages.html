@@ -1,0 +1,63 @@
+<div class="admin-messages-page animate-fade-in">
+  <div class="page-title-row">
+    <div>
+      <h1 class="page-title">Bandeja de Consultas Web</h1>
+      <p class="page-subtitle">Mensajes y solicitudes enviadas a través del formulario de contacto.</p>
+    </div>
+    <button class="btn btn-outline btn-sm" (click)="loadMessages()">
+      <i class="material-symbols-outlined">refresh</i>
+      <span>Refrescar</span>
+    </button>
+  </div>
+
+  <div class="content-panel">
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+      </div>
+    } @else if (messages().length === 0) {
+      <div class="empty-state">
+        <i class="material-symbols-outlined empty-icon">mark_email_read</i>
+        <h3>No hay mensajes nuevos</h3>
+        <p>Las consultas enviadas por los visitantes de la web se listarán aquí.</p>
+      </div>
+    } @else {
+      <div class="messages-list">
+        @for (m of messages(); track m.id) {
+          <div class="message-card" [class.unread]="!m.isRead">
+            <div class="msg-header">
+              <div class="msg-sender">
+                <strong>{{ m.name }}</strong>
+                <span class="msg-meta">{{ m.email }} • {{ m.phone || 'Sin teléfono' }}</span>
+              </div>
+              <div class="msg-date">
+                <span>{{ m.createdAt | date:'short' }}</span>
+                @if (!m.isRead) {
+                  <span class="badge-unread">Nuevo</span>
+                }
+              </div>
+            </div>
+
+            <div class="msg-subject">
+              <strong>Asunto:</strong> {{ m.subject || 'Consulta general' }}
+            </div>
+
+            <p class="msg-body">{{ m.message }}</p>
+
+            <div class="msg-actions">
+              @if (!m.isRead) {
+                <button class="btn btn-outline btn-sm" (click)="markAsRead(m.id)">
+                  <i class="material-symbols-outlined icon-sm">check</i>
+                  <span>Marcar como leído</span>
+                </button>
+              }
+              <button class="btn-icon delete" (click)="deleteMessage(m.id)" title="Eliminar mensaje">
+                <i class="material-symbols-outlined">delete</i>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

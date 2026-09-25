@@ -1,0 +1,938 @@
+<!-- Top Notification / Currency / Language Bar -->
+<div class="top-bar">
+  <div class="container top-bar-content">
+    <div class="top-bar-left">
+      <span><i class="material-symbols-outlined icon-sm">call</i> +51 984 000 000</span>
+      <span class="divider">|</span>
+      <span><i class="material-symbols-outlined icon-sm">mail</i> info&#64;inkallajtatour.com</span>
+      <span class="divider hide-mobile">|</span>
+      <span class="promo-text hide-mobile"><i class="material-symbols-outlined icon-sm">verified</i> {{ tr.t('hero.badge') }}</span>
+    </div>
+    <div class="top-bar-right">
+      <!-- Currency Toggle -->
+      <button class="currency-toggle-btn" (click)="toggleCurrency()" title="Cambiar moneda / Change currency">
+        <i class="material-symbols-outlined icon-sm">payments</i>
+        <span><strong>{{ selectedCurrency() }}</strong></span>
+      </button>
+
+      <!-- Language Selector -->
+      <div class="lang-switch-group" role="group" aria-label="Language Selector">
+        <button
+          type="button"
+          class="lang-btn"
+          [class.active]="tr.currentLang() === 'es'"
+          (click)="tr.setLanguage('es')"
+          title="Español"
+        >
+          <span class="flag">🇪🇸</span>
+          <span>ES</span>
+        </button>
+        <button
+          type="button"
+          class="lang-btn"
+          [class.active]="tr.currentLang() === 'en'"
+          (click)="tr.setLanguage('en')"
+          title="English"
+        >
+          <span class="flag">🇺🇸</span>
+          <span>EN</span>
+        </button>
+      </div>
+
+      <a routerLink="/admin/login" class="admin-login-link" [title]="tr.t('nav.admin')">
+        <i class="material-symbols-outlined icon-sm">admin_panel_settings</i>
+        <span>Admin</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Main Sticky Header / Navbar -->
+<header class="main-header glass-panel">
+  <div class="container header-container">
+    <a href="#" class="brand-logo">
+      <div class="logo-symbol">
+        <i class="material-symbols-outlined">wb_sunny</i>
+      </div>
+      <div class="logo-text">
+        <span class="brand-name">INKALLAJTA</span>
+        <span class="brand-tagline">TOUR PERU</span>
+      </div>
+    </a>
+
+    <!-- Mobile Hamburger Button -->
+    <button
+      class="hamburger-btn"
+      (click)="toggleMobileMenu()"
+      [class.active]="mobileMenuOpen()"
+      aria-label="Abrir menú"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Nav Links (Desktop & Mobile Drawer) -->
+    <nav class="nav-links" [class.nav-open]="mobileMenuOpen()">
+      <!-- Mobile Controls Inside Drawer -->
+      <div class="mobile-drawer-controls">
+        <div class="drawer-lang-wrap">
+          <span class="drawer-label">{{ tr.t('nav.lang') }}:</span>
+          <div class="lang-switch-group">
+            <button
+              type="button"
+              class="lang-btn"
+              [class.active]="tr.currentLang() === 'es'"
+              (click)="tr.setLanguage('es')"
+            >
+              <span class="flag">🇪🇸</span> ES
+            </button>
+            <button
+              type="button"
+              class="lang-btn"
+              [class.active]="tr.currentLang() === 'en'"
+              (click)="tr.setLanguage('en')"
+            >
+              <span class="flag">🇺🇸</span> EN
+            </button>
+          </div>
+        </div>
+
+        <div class="drawer-curr-wrap">
+          <span class="drawer-label">{{ tr.t('nav.currency') }}:</span>
+          <button class="currency-toggle-btn" (click)="toggleCurrency()">
+            <i class="material-symbols-outlined icon-sm">payments</i>
+            <span>{{ selectedCurrency() }}</span>
+          </button>
+        </div>
+      </div>
+
+      <a (click)="scrollToSection('inicio')" class="nav-item active">{{ tr.t('nav.home') }}</a>
+      <a (click)="scrollToSection('tours'); setCategory(1)" class="nav-item">{{ tr.t('cat.machuPicchu') }}</a>
+      <a (click)="scrollToSection('tours'); setCategory(2)" class="nav-item">{{ tr.t('cat.dayTours') }}</a>
+      <a (click)="scrollToSection('tours'); setCategory(3)" class="nav-item">{{ tr.t('cat.treks') }}</a>
+      <a (click)="scrollToSection('nosotros')" class="nav-item">{{ tr.t('nav.whyUs') }}</a>
+      <a (click)="scrollToSection('testimonios')" class="nav-item">{{ tr.t('nav.testimonials') }}</a>
+      <a (click)="scrollToSection('contacto')" class="nav-item">{{ tr.t('nav.contact') }}</a>
+    </nav>
+
+    <div class="header-actions hide-mobile">
+      <a (click)="scrollToSection('tours')" class="btn btn-primary btn-sm">
+        <i class="material-symbols-outlined">explore</i>
+        <span>{{ tr.t('nav.bookNow') }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Overlay -->
+@if (mobileMenuOpen()) {
+  <div class="mobile-overlay" (click)="closeMobileMenu()"></div>
+}
+
+<!-- Hero Section -->
+<section id="inicio" class="hero-section">
+  <div class="hero-bg-overlay"></div>
+  <div class="container hero-content">
+    <div class="hero-badge animate-fade-in">
+      <i class="material-symbols-outlined">hotel_class</i>
+      <span>{{ tr.t('hero.badge') }}</span>
+    </div>
+    <h1 class="hero-title animate-fade-in">
+      {{ tr.t('hero.title1') }} <span class="text-gold">{{ tr.t('hero.title2') }}</span>
+    </h1>
+    <p class="hero-subtitle animate-fade-in">
+      {{ tr.t('hero.subtitle') }}
+    </p>
+
+    <!-- Search & Filter Bar -->
+    <div class="search-filter-card glass-panel">
+      <div class="search-input-group">
+        <i class="material-symbols-outlined search-icon">search</i>
+        <div class="input-details">
+          <label>{{ tr.currentLang() === 'en' ? 'Where do you want to go?' : '¿A dónde deseas viajar?' }}</label>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            [placeholder]="tr.t('hero.searchPlaceholder')"
+          />
+        </div>
+      </div>
+
+      <div class="search-divider"></div>
+
+      <div class="search-input-group">
+        <i class="material-symbols-outlined search-icon">category</i>
+        <div class="input-details">
+          <label>{{ tr.currentLang() === 'en' ? 'Category' : 'Categoría' }}</label>
+          <select [ngModel]="selectedCategory()" (ngModelChange)="setCategory($event ? +$event : null)">
+            <option [ngValue]="null">{{ tr.t('cat.all') }}</option>
+            @for (cat of categories(); track cat.id) {
+              <option [ngValue]="cat.id">{{ getCategoryDisplayName(cat) }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-search" (click)="scrollToSection('tours')">
+        <i class="material-symbols-outlined">travel_explore</i>
+        <span>{{ tr.t('hero.btnSearch') }}</span>
+      </button>
+    </div>
+
+    <!-- Trust Stats Row -->
+    <div class="hero-stats-row">
+      <div class="stat-item">
+        <i class="material-symbols-outlined">verified_user</i>
+        <div>
+          <strong>100%</strong>
+          <span>{{ tr.currentLang() === 'en' ? 'Authorized Operator' : 'Operador Autorizado' }}</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <i class="material-symbols-outlined">sentiment_very_satisfied</i>
+        <div>
+          <strong>+12,000</strong>
+          <span>{{ tr.t('stats.travelers') }}</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <i class="material-symbols-outlined">star</i>
+        <div>
+          <strong>4.9 / 5.0</strong>
+          <span>{{ tr.t('stats.satisfaction') }}</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <i class="material-symbols-outlined">support_agent</i>
+        <div>
+          <strong>24/7</strong>
+          <span>{{ tr.t('stats.support') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category Pills Strip -->
+<section class="categories-section scroll-reveal">
+  <div class="container">
+    <div class="category-pills-wrapper">
+      <button
+        class="cat-pill"
+        [class.active]="selectedCategory() === null"
+        (click)="setCategory(null)"
+      >
+        <i class="material-symbols-outlined">apps</i>
+        <span>{{ tr.t('cat.all') }}</span>
+        <span class="count-badge">{{ tours().length }}</span>
+      </button>
+
+      @for (cat of categories(); track cat.id) {
+        <button
+          class="cat-pill"
+          [class.active]="selectedCategory() === cat.id"
+          (click)="setCategory(cat.id)"
+        >
+          <i class="material-symbols-outlined">{{ cat.icon }}</i>
+          <span>{{ getCategoryDisplayName(cat) }}</span>
+          <span class="count-badge">{{ cat.tourCount }}</span>
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Tours Grid Section -->
+<section id="tours" class="tours-section">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-tag">
+        <i class="material-symbols-outlined">explore</i>
+        {{ tr.t('nav.tours') }}
+      </span>
+      <h2 class="section-title">
+        {{ tr.currentLang() === 'en' ? 'Featured Tours & Excursions' : 'Paquetes y Excursiones Populares' }}
+      </h2>
+      <p class="section-subtitle">
+        {{ tr.currentLang() === 'en'
+          ? 'Choose your next unforgettable adventure through Cusco, the Sacred Valley, Machu Picchu, and alpine natural wonders.'
+          : 'Selecciona tu próxima aventura por Cusco, el Valle Sagrado, la ciudadela de Machu Picchu y maravillas naturales.'
+        }}
+      </p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>{{ tr.currentLang() === 'en' ? 'Loading amazing destinations...' : 'Cargando increíbles destinos...' }}</p>
+      </div>
+    } @else if (filteredTours().length === 0) {
+      <div class="empty-state glass-panel">
+        <i class="material-symbols-outlined empty-icon">search_off</i>
+        <h3>{{ tr.t('tour.noResults') }}</h3>
+        <p>{{ tr.currentLang() === 'en' ? 'Try changing your search keywords or pick a different category.' : 'Intenta cambiar los términos de búsqueda o selecciona otra categoría.' }}</p>
+        <button class="btn btn-outline" (click)="setCategory(null); searchQuery.set('')">
+          {{ tr.t('tour.clearFilters') }}
+        </button>
+      </div>
+    } @else {
+      <div class="tours-grid">
+        @for (tour of filteredTours(); track tour.id; let i = $index) {
+          <div class="tour-card scroll-reveal" [class.featured-border]="tour.isFeatured" [style.animation-delay]="(i * 0.08) + 's'">
+            <div class="card-image-wrap">
+              <img [src]="tour.imageUrl" [alt]="tr.getTourTitle(tour.id, tour.title)" loading="lazy" (error)="onImgError($event)" />
+              <div class="image-gradient-overlay"></div>
+
+              @if (tour.isFeatured) {
+                <span class="card-badge badge-fire">
+                  <i class="material-symbols-outlined icon-xs">local_fire_department</i>
+                  {{ tr.t('tour.featured') }}
+                </span>
+              }
+
+              <div class="card-category-tag">
+                {{ tour.categoryName }}
+              </div>
+
+              <div class="card-price-overlay">
+                <span class="price-from">{{ tr.t('tour.from') }}</span>
+                <span class="price-amount">{{ formatPrice(tour.price) }}</span>
+                <span class="price-unit">{{ tr.t('tour.perPerson') }}</span>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-meta-row">
+                <span class="meta-item">
+                  <i class="material-symbols-outlined">schedule</i>
+                  {{ tr.getTourDuration(tour.id, tour.duration) }}
+                </span>
+                <span class="meta-item">
+                  <i class="material-symbols-outlined">place</i>
+                  {{ tr.getTourLocation(tour.id, tour.location) }}
+                </span>
+                <span class="difficulty-tag" [ngClass]="tour.difficulty">
+                  {{ tr.getDifficultyLabel(tour.difficulty) }}
+                </span>
+              </div>
+
+              <h3 class="card-title">
+                <a [routerLink]="['/tours', tour.slug]">{{ tr.getTourTitle(tour.id, tour.title) }}</a>
+              </h3>
+              <p class="card-desc">{{ tr.getTourShortDesc(tour.id, tour.shortDescription) }}</p>
+
+              <div class="card-rating-row">
+                <div class="stars">
+                  <i class="material-symbols-outlined star-fill">star</i>
+                  <strong>{{ tour.rating }}</strong>
+                  <span class="reviews-count">({{ tour.reviewCount }} {{ tr.currentLang() === 'en' ? 'reviews' : 'opiniones' }})</span>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <a [routerLink]="['/tours', tour.slug]" class="btn btn-outline btn-sm btn-full">
+                  <i class="material-symbols-outlined">visibility</i>
+                  <span>{{ tr.t('tour.viewDetail') }}</span>
+                </a>
+                <button class="btn btn-primary btn-sm btn-full" (click)="openTourDetail(tour)">
+                  <i class="material-symbols-outlined">bookmark_add</i>
+                  <span>{{ tr.t('tour.bookNow') }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Tour Detail & Booking Modal / Drawer -->
+@if (showBookingModal() && activeTour()) {
+  <div class="modal-backdrop" (click)="closeTourDetail()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <button class="modal-close-btn" (click)="closeTourDetail()" [title]="tr.t('book.close')">
+        <i class="material-symbols-outlined">close</i>
+      </button>
+
+      <div class="modal-grid">
+        <!-- Tour Details Left Side -->
+        <div class="modal-details-col">
+          <div class="modal-hero-img">
+            <img [src]="activeTour()!.imageUrl" [alt]="tr.getTourTitle(activeTour()!.id, activeTour()!.title)" (error)="onImgError($event)" />
+            <div class="modal-hero-badge">
+              <i class="material-symbols-outlined">place</i>
+              {{ tr.getTourLocation(activeTour()!.id, activeTour()!.location) }}
+            </div>
+          </div>
+
+          <div class="modal-header-info">
+            <span class="category-chip">{{ activeTour()!.categoryName }}</span>
+            <h2>{{ tr.getTourTitle(activeTour()!.id, activeTour()!.title) }}</h2>
+            <div class="modal-meta-bar">
+              <span><i class="material-symbols-outlined">schedule</i> {{ tr.getTourDuration(activeTour()!.id, activeTour()!.duration) }}</span>
+              <span><i class="material-symbols-outlined">terrain</i> {{ tr.getDifficultyLabel(activeTour()!.difficulty) }}</span>
+              <span><i class="material-symbols-outlined">star</i> {{ activeTour()!.rating }} ({{ activeTour()!.reviewCount }})</span>
+            </div>
+          </div>
+
+          <div class="modal-section">
+            <h3>{{ tr.t('detail.overview') }}</h3>
+            <p>{{ tr.getTourShortDesc(activeTour()!.id, activeTour()!.shortDescription) }}</p>
+          </div>
+
+          <!-- Itinerary Highlights -->
+          @if (activeTourItinerary().length > 0) {
+            <div class="modal-section">
+              <h3>{{ tr.t('detail.itinerary') }}</h3>
+              <div class="timeline-list">
+                @for (item of activeTourItinerary(); track $index) {
+                  <div class="timeline-point">
+                    <span class="time-badge">{{ item.time }}</span>
+                    <div class="point-desc">
+                      <strong>{{ item.title }}</strong>
+                      <p>{{ item.desc }}</p>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Includes / Excludes -->
+          <div class="modal-section inc-exc-section">
+            <div class="inc-col">
+              <h4><i class="material-symbols-outlined text-success">check_circle</i> {{ tr.t('detail.includes') }}</h4>
+              <ul>
+                @for (inc of activeTourIncludes(); track $index) {
+                  <li>{{ inc }}</li>
+                }
+              </ul>
+            </div>
+            <div class="exc-col">
+              <h4><i class="material-symbols-outlined text-danger">cancel</i> {{ tr.t('detail.excludes') }}</h4>
+              <ul>
+                @for (exc of activeTourExcludes(); track $index) {
+                  <li>{{ exc }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Booking Form Right Side -->
+        <div class="modal-booking-col">
+          <div class="booking-header">
+            <h3>{{ tr.t('book.modalTitle') }}</h3>
+            <div class="price-callout">
+              <span class="label">{{ tr.t('tour.from') }}</span>
+              <span class="big-price">{{ formatPrice(activeTour()!.price) }}</span>
+              <span class="unit">{{ tr.t('tour.perPerson') }}</span>
+            </div>
+          </div>
+
+          @if (bookingSuccess()) {
+            <div class="booking-success-box animate-fade-in">
+              <div class="success-icon">
+                <i class="material-symbols-outlined">check_circle</i>
+              </div>
+              <h4>{{ tr.t('book.successTitle') }}</h4>
+              <p>
+                {{ tr.currentLang() === 'en'
+                  ? 'We received your reservation with code #' + lastBookingId() + '. Our team will contact you shortly to coordinate ticket logistics.'
+                  : 'Hemos registrado tu solicitud con código #' + lastBookingId() + '. Te contactaremos a la brevedad para coordinar boletos y detalles.'
+                }}
+              </p>
+              <div class="success-actions">
+                <a
+                  [href]="getWhatsAppBookingUrl()"
+                  target="_blank"
+                  class="btn btn-whatsapp btn-full"
+                >
+                  <i class="material-symbols-outlined">chat</i>
+                  <span>{{ tr.t('book.btnWhatsApp') }}</span>
+                </a>
+                <button class="btn btn-outline btn-full" (click)="closeTourDetail()">
+                  {{ tr.t('book.close') }}
+                </button>
+              </div>
+            </div>
+          } @else {
+            <form class="modal-booking-form" (ngSubmit)="submitBooking()">
+              <div class="form-group">
+                <label>{{ tr.t('book.name') }} *</label>
+                <input
+                  type="text"
+                  [(ngModel)]="bookingForm.clientName"
+                  name="clientName"
+                  [placeholder]="tr.currentLang() === 'en' ? 'John Doe' : 'Ej: Juan Pérez'"
+                  required
+                />
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>{{ tr.t('book.email') }} *</label>
+                  <input
+                    type="email"
+                    [(ngModel)]="bookingForm.email"
+                    name="email"
+                    placeholder="email@example.com"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label>{{ tr.t('book.phone') }} *</label>
+                  <input
+                    type="tel"
+                    [(ngModel)]="bookingForm.phone"
+                    name="phone"
+                    placeholder="+51 984..."
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>{{ tr.t('book.country') }}</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="bookingForm.country"
+                    name="country"
+                    [placeholder]="tr.currentLang() === 'en' ? 'United States' : 'Ej: Perú, México...'"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>{{ tr.t('book.date') }} *</label>
+                  <input
+                    type="date"
+                    [(ngModel)]="bookingForm.travelDate"
+                    name="travelDate"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>{{ tr.t('book.people') }} *</label>
+                <div class="people-counter">
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    (click)="changePeople(-1)"
+                    [disabled]="bookingForm.numberOfPeople <= 1"
+                  >
+                    -
+                  </button>
+                  <span class="people-num">{{ bookingForm.numberOfPeople }}</span>
+                  <button
+                    type="button"
+                    class="btn-counter"
+                    (click)="changePeople(1)"
+                  >
+                    +
+                  </button>
+                  <span class="people-label">{{ tr.t('tour.people') }}</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>{{ tr.t('book.special') }}</label>
+                <textarea
+                  [(ngModel)]="bookingForm.specialRequests"
+                  name="specialRequests"
+                  rows="2"
+                  [placeholder]="tr.currentLang() === 'en' ? 'Vegetarian, hotel pickup, etc...' : 'Vegetariano, recojo en hotel, etc...'"
+                ></textarea>
+              </div>
+
+              <!-- Price Breakdown -->
+              <div class="price-breakdown-card">
+                <div class="breakdown-row">
+                  <span>{{ formatPrice(activeTour()!.price) }} × {{ bookingForm.numberOfPeople }} {{ tr.t('tour.people') }}</span>
+                  <span>{{ formatPrice(calculateSubtotal()) }}</span>
+                </div>
+                <div class="breakdown-total">
+                  <strong>{{ tr.t('book.subtotal') }}</strong>
+                  <strong class="total-highlight">{{ formatPrice(calculateSubtotal()) }}</strong>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary btn-lg btn-full"
+                [disabled]="bookingSubmitting()"
+              >
+                @if (bookingSubmitting()) {
+                  <i class="material-symbols-outlined spin">sync</i>
+                  <span>{{ tr.t('book.submitting') }}</span>
+                } @else {
+                  <i class="material-symbols-outlined">send</i>
+                  <span>{{ tr.t('book.btnConfirm') }}</span>
+                }
+              </button>
+
+              <p class="booking-notice">
+                <i class="material-symbols-outlined icon-xs">lock</i>
+                {{ tr.currentLang() === 'en' ? 'Zero spam. Direct WhatsApp coordination & secure payment.' : 'Sin spam. Coordinación directa por WhatsApp y confirmación segura.' }}
+              </p>
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Why Choose Us Section -->
+<section id="nosotros" class="why-us-section">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-tag">
+        <i class="material-symbols-outlined">shield</i>
+        {{ tr.t('why.badge') }}
+      </span>
+      <h2 class="section-title">{{ tr.t('why.title') }}</h2>
+      <p class="section-subtitle">
+        {{ tr.t('why.subtitle') }}
+      </p>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-card glass-panel scroll-reveal">
+        <div class="why-icon-wrap">
+          <i class="material-symbols-outlined">badge</i>
+        </div>
+        <h3>{{ tr.t('why.f1Title') }}</h3>
+        <p>{{ tr.t('why.f1Desc') }}</p>
+      </div>
+
+      <div class="why-card glass-panel scroll-reveal">
+        <div class="why-icon-wrap">
+          <i class="material-symbols-outlined">groups</i>
+        </div>
+        <h3>{{ tr.t('why.f2Title') }}</h3>
+        <p>{{ tr.t('why.f2Desc') }}</p>
+      </div>
+
+      <div class="why-card glass-panel scroll-reveal">
+        <div class="why-icon-wrap">
+          <i class="material-symbols-outlined">price_check</i>
+        </div>
+        <h3>{{ tr.t('why.f3Title') }}</h3>
+        <p>{{ tr.t('why.f3Desc') }}</p>
+      </div>
+
+      <div class="why-card glass-panel scroll-reveal">
+        <div class="why-icon-wrap">
+          <i class="material-symbols-outlined">event_available</i>
+        </div>
+        <h3>{{ tr.t('why.f4Title') }}</h3>
+        <p>{{ tr.t('why.f4Desc') }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section — Carousel -->
+<section id="testimonios" class="testimonials-section">
+  <div class="container">
+    <div class="section-header scroll-reveal">
+      <span class="section-tag">
+        <i class="material-symbols-outlined">reviews</i>
+        {{ tr.t('test.badge') }}
+      </span>
+      <h2 class="section-title">{{ tr.t('test.title') }}</h2>
+      <p class="section-subtitle">
+        {{ tr.t('test.subtitle') }}
+      </p>
+    </div>
+
+    <!-- Carousel Mobile -->
+    <div class="testimonial-carousel scroll-reveal">
+      <div class="carousel-track" [style.transform]="'translateX(-' + (activeTestimonialIndex() * 100) + '%)'">
+        @for (test of testimonials(); track test.id) {
+          <div class="carousel-slide">
+            <div class="testimonial-card glass-panel">
+              <div class="test-quote-icon">
+                <i class="material-symbols-outlined">format_quote</i>
+              </div>
+              <div class="test-stars">
+                @for (s of [1,2,3,4,5]; track s) {
+                  <i class="material-symbols-outlined star-fill">star</i>
+                }
+              </div>
+              <p class="test-comment">"{{ test.comment }}"</p>
+              <div class="test-author-row">
+                <div class="author-avatar">
+                  {{ test.clientName.charAt(0) }}
+                </div>
+                <div class="author-info">
+                  <h4>{{ test.clientName }}</h4>
+                  <span>{{ test.origin }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Carousel Dots -->
+      <div class="carousel-dots">
+        @for (test of testimonials(); track test.id; let i = $index) {
+          <button
+            class="dot"
+            [class.active]="activeTestimonialIndex() === i"
+            (click)="setTestimonialIndex(i)"
+          ></button>
+        }
+      </div>
+    </div>
+
+    <!-- Desktop Testimonial Grid -->
+    <div class="testimonials-grid scroll-reveal">
+      @for (test of testimonials(); track test.id) {
+        <div class="testimonial-card glass-panel">
+          <div class="test-quote-icon">
+            <i class="material-symbols-outlined">format_quote</i>
+          </div>
+          <div class="test-stars">
+            @for (s of [1,2,3,4,5]; track s) {
+              <i class="material-symbols-outlined star-fill">star</i>
+            }
+          </div>
+          <p class="test-comment">"{{ test.comment }}"</p>
+          <div class="test-author-row">
+            <div class="author-avatar">
+              {{ test.clientName.charAt(0) }}
+            </div>
+            <div class="author-info">
+              <h4>{{ test.clientName }}</h4>
+              <span>{{ test.origin }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contacto" class="contact-section">
+  <div class="container">
+    <div class="contact-grid scroll-reveal">
+      <div class="contact-info-col">
+        <span class="section-tag">
+          <i class="material-symbols-outlined">contact_support</i>
+          {{ tr.t('contact.badge') }}
+        </span>
+        <h2>{{ tr.t('contact.title') }}</h2>
+        <p>
+          {{ tr.t('contact.subtitle') }}
+        </p>
+
+        <div class="contact-details-list">
+          <div class="c-item">
+            <i class="material-symbols-outlined">location_on</i>
+            <div>
+              <strong>{{ tr.t('contact.addressLabel') }}</strong>
+              <span>{{ tr.t('contact.address') }}</span>
+            </div>
+          </div>
+          <div class="c-item">
+            <i class="material-symbols-outlined">phone_iphone</i>
+            <div>
+              <strong>{{ tr.t('contact.phoneLabel') }}</strong>
+              <span>+51 984 000 000 / +51 984 111 222</span>
+            </div>
+          </div>
+          <div class="c-item">
+            <i class="material-symbols-outlined">mail</i>
+            <div>
+              <strong>{{ tr.t('contact.emailLabel') }}</strong>
+              <span>info&#64;inkallajtatour.com</span>
+            </div>
+          </div>
+          <div class="c-item">
+            <i class="material-symbols-outlined">schedule</i>
+            <div>
+              <strong>{{ tr.t('contact.hoursLabel') }}</strong>
+              <span>{{ tr.t('contact.hours') }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-col">
+        @if (contactSuccess()) {
+          <div class="contact-success-alert animate-fade-in">
+            <i class="material-symbols-outlined">check_circle</i>
+            <h4>{{ tr.currentLang() === 'en' ? 'Message Received!' : '¡Mensaje Recibido!' }}</h4>
+            <p>{{ tr.t('contact.success') }}</p>
+          </div>
+        }
+
+        <form class="contact-form" (ngSubmit)="submitContact()">
+          <div class="form-group">
+            <label>{{ tr.t('contact.formName') }} *</label>
+            <input
+              type="text"
+              [(ngModel)]="contactForm.name"
+              name="contactName"
+              [placeholder]="tr.currentLang() === 'en' ? 'Your full name' : 'Tu nombre completo'"
+              required
+            />
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>{{ tr.t('contact.formEmail') }} *</label>
+              <input
+                type="email"
+                [(ngModel)]="contactForm.email"
+                name="contactEmail"
+                placeholder="you@email.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>{{ tr.t('contact.formPhone') }}</label>
+              <input
+                type="tel"
+                [(ngModel)]="contactForm.phone"
+                name="contactPhone"
+                placeholder="+51 984..."
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>{{ tr.t('contact.formSubject') }}</label>
+            <input
+              type="text"
+              [(ngModel)]="contactForm.subject"
+              name="contactSubject"
+              [placeholder]="tr.currentLang() === 'en' ? 'e.g., Machu Picchu 2 travelers inquiry' : 'Ej: Cotización Tour Machu Picchu 2 personas'"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>{{ tr.t('contact.formMessage') }} *</label>
+            <textarea
+              [(ngModel)]="contactForm.message"
+              name="contactMessage"
+              rows="4"
+              [placeholder]="tr.t('contact.formMessage')"
+              required
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg btn-full"
+            [disabled]="contactSubmitting()"
+          >
+            @if (contactSubmitting()) {
+              <i class="material-symbols-outlined spin">sync</i>
+              <span>{{ tr.t('contact.sending') }}</span>
+            } @else {
+              <i class="material-symbols-outlined">send</i>
+              <span>{{ tr.t('contact.btnSend') }}</span>
+            }
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="main-footer">
+  <div class="container footer-content">
+    <div class="footer-col-brand">
+      <div class="brand-logo footer-logo">
+        <div class="logo-symbol">
+          <i class="material-symbols-outlined">wb_sunny</i>
+        </div>
+        <div class="logo-text">
+          <span class="brand-name footer-brand-name">INKALLAJTA</span>
+          <span class="brand-tagline">TOUR PERU</span>
+        </div>
+      </div>
+      <p class="footer-desc">
+        {{ tr.t('footer.desc') }}
+      </p>
+      <div class="footer-certifications">
+        <span class="cert-pill"><i class="material-symbols-outlined icon-xs">verified</i> DIRCETUR Cusco</span>
+        <span class="cert-pill"><i class="material-symbols-outlined icon-xs">verified</i> MINCETUR</span>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>{{ tr.t('footer.topTours') }}</h4>
+      <ul>
+        <li><a routerLink="/tours/tour-machupicchu-1-dia">{{ tr.getTourTitle(1, 'Machu Picchu 1 Día') }}</a></li>
+        <li><a routerLink="/tours/valle-sagrado-machupicchu-2d-1n">{{ tr.getTourTitle(2, 'Valle Sagrado & Conexión') }}</a></li>
+        <li><a routerLink="/tours/montana-7-colores">{{ tr.getTourTitle(5, 'Montaña de 7 Colores') }}</a></li>
+        <li><a routerLink="/tours/laguna-humantay">{{ tr.getTourTitle(6, 'Laguna Humantay') }}</a></li>
+        <li><a routerLink="/tours/salkantay-trek-5d-4n">{{ tr.getTourTitle(8, 'Salkantay Trek 5D/4N') }}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>{{ tr.t('footer.quickLinks') }}</h4>
+      <ul>
+        <li><a (click)="scrollToSection('inicio')">{{ tr.t('nav.home') }}</a></li>
+        <li><a (click)="scrollToSection('nosotros')">{{ tr.t('nav.whyUs') }}</a></li>
+        <li><a (click)="scrollToSection('testimonios')">{{ tr.t('nav.testimonials') }}</a></li>
+        <li><a (click)="scrollToSection('contacto')">{{ tr.t('nav.contact') }}</a></li>
+        <li><a routerLink="/admin/login">{{ tr.t('nav.admin') }}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>{{ tr.t('footer.contact') }}</h4>
+      <ul class="footer-contact-list">
+        <li><i class="material-symbols-outlined icon-sm">place</i> {{ tr.t('contact.address') }}</li>
+        <li><i class="material-symbols-outlined icon-sm">call</i> +51 984 000 000</li>
+        <li><i class="material-symbols-outlined icon-sm">mail</i> info&#64;inkallajtatour.com</li>
+      </ul>
+      <div class="payment-methods-box">
+        <span>{{ tr.currentLang() === 'en' ? 'We Accept:' : 'Aceptamos:' }}</span>
+        <div class="pay-icons">
+          <span class="pay-tag">Visa</span>
+          <span class="pay-tag">Mastercard</span>
+          <span class="pay-tag">PayPal</span>
+          <span class="pay-tag">Yape / Plin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-flex">
+      <p>© 2026 Inkallajta Tour Perú E.I.R.L. - {{ tr.t('footer.rights') }}</p>
+      <div class="footer-bottom-links">
+        <a (click)="scrollToSection('contacto')">{{ tr.currentLang() === 'en' ? 'Terms & Conditions' : 'Términos y Condiciones' }}</a>
+        <span>•</span>
+        <a (click)="scrollToSection('contacto')">{{ tr.currentLang() === 'en' ? 'Privacy Policy' : 'Política de Privacidad' }}</a>
+        <span>•</span>
+        <a (click)="scrollToSection('contacto')">{{ tr.currentLang() === 'en' ? 'Complaints Book' : 'Libro de Reclamaciones' }}</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp Button -->
+<a
+  href="https://wa.me/51984000000?text=%C2%A1Hola%20Inkallajta%20Tour!%20Deseo%20informaci%C3%B3n%20sobre%20los%20tours%20a%20Machu%20Picchu."
+  target="_blank"
+  class="floating-whatsapp"
+  [title]="tr.currentLang() === 'en' ? 'Chat with us on WhatsApp' : 'Hablar con un asesor por WhatsApp'"
+>
+  <div class="whatsapp-pulse"></div>
+  <i class="material-symbols-outlined">chat</i>
+  <span class="wa-tooltip">{{ tr.currentLang() === 'en' ? 'Questions? Chat with us!' : '¿Dudas? ¡Escríbenos aquí!' }}</span>
+</a>

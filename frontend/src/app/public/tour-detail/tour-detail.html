@@ -1,0 +1,317 @@
+<!-- Loading State -->
+@if (isLoading()) {
+  <div class="detail-loading">
+    <div class="skeleton-hero"></div>
+    <div class="skeleton-content">
+      <div class="skeleton-line w-60"></div>
+      <div class="skeleton-line w-80"></div>
+      <div class="skeleton-line w-40"></div>
+    </div>
+  </div>
+}
+
+<!-- Not Found State -->
+@if (notFound()) {
+  <div class="not-found-page">
+    <i class="material-symbols-outlined">explore_off</i>
+    <h1>{{ tr.currentLang() === 'en' ? 'Tour Not Found' : 'Tour No Encontrado' }}</h1>
+    <p>{{ tr.currentLang() === 'en' ? 'The tour you are looking for does not exist or is no longer available.' : 'El tour que buscas no existe o ya no está disponible.' }}</p>
+    <a routerLink="/" class="btn btn-primary">
+      <i class="material-symbols-outlined">home</i>
+      <span>{{ tr.t('detail.back') }}</span>
+    </a>
+  </div>
+}
+
+<!-- Tour Detail Page -->
+@if (!isLoading() && !notFound() && tour()) {
+  <!-- Breadcrumb & Language/Currency Bar -->
+  <nav class="breadcrumb-bar">
+    <div class="container breadcrumb-content">
+      <div class="breadcrumb-left">
+        <a routerLink="/" class="breadcrumb-link">
+          <i class="material-symbols-outlined">home</i> {{ tr.t('nav.home') }}
+        </a>
+        <i class="material-symbols-outlined breadcrumb-sep">chevron_right</i>
+        <a routerLink="/" fragment="tours" class="breadcrumb-link">{{ tr.t('nav.tours') }}</a>
+        <i class="material-symbols-outlined breadcrumb-sep">chevron_right</i>
+        <span class="breadcrumb-current">{{ tr.getTourTitle(tour()!.id, tour()!.title) }}</span>
+      </div>
+
+      <div class="breadcrumb-right">
+        <!-- Currency Toggle -->
+        <button class="currency-toggle-btn" (click)="toggleCurrency()" title="Cambiar moneda">
+          <i class="material-symbols-outlined icon-sm">payments</i>
+          <span><strong>{{ selectedCurrency() }}</strong></span>
+        </button>
+
+        <!-- Language Selector -->
+        <div class="lang-switch-group" role="group" aria-label="Language Selector">
+          <button
+            type="button"
+            class="lang-btn"
+            [class.active]="tr.currentLang() === 'es'"
+            (click)="tr.setLanguage('es')"
+            title="Español"
+          >
+            <span class="flag">🇪🇸</span>
+            <span>ES</span>
+          </button>
+          <button
+            type="button"
+            class="lang-btn"
+            [class.active]="tr.currentLang() === 'en'"
+            (click)="tr.setLanguage('en')"
+            title="English"
+          >
+            <span class="flag">🇺🇸</span>
+            <span>EN</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Gallery -->
+  <section class="tour-hero">
+    <div class="container">
+      <div class="gallery-grid">
+        <div class="gallery-main" (click)="openLightbox(activeGalleryIndex())">
+          <img
+            [src]="galleryImages()[activeGalleryIndex()]"
+            [alt]="tr.getTourTitle(tour()!.id, tour()!.title)"
+            (error)="onImgError($event)"
+          />
+          <div class="gallery-overlay">
+            <i class="material-symbols-outlined">fullscreen</i>
+            <span>{{ tr.currentLang() === 'en' ? 'View Fullscreen' : 'Ver a pantalla completa' }}</span>
+          </div>
+          <div class="gallery-badge">
+            <i class="material-symbols-outlined">photo_camera</i>
+            {{ galleryImages().length }} {{ tr.currentLang() === 'en' ? 'photos' : 'fotos' }}
+          </div>
+        </div>
+        @if (galleryImages().length > 1) {
+          <div class="gallery-thumbs">
+            @for (img of galleryImages(); track $index) {
+              <div
+                class="thumb"
+                [class.active]="activeGalleryIndex() === $index"
+                (click)="setGalleryIndex($index)"
+              >
+                <img [src]="img" [alt]="'Foto ' + ($index + 1)" (error)="onImgError($event)" />
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="tour-content-section">
+    <div class="container tour-layout">
+      <!-- Left: Tour Info -->
+      <div class="tour-info-col">
+        <!-- Title & Badges -->
+        <div class="tour-header-block">
+          <span class="category-label">{{ tour()!.categoryName }}</span>
+          <h1 class="tour-title">{{ tr.getTourTitle(tour()!.id, tour()!.title) }}</h1>
+
+          <div class="meta-badges">
+            <span class="meta-badge">
+              <i class="material-symbols-outlined">schedule</i> {{ tr.getTourDuration(tour()!.id, tour()!.duration) }}
+            </span>
+            <span class="meta-badge">
+              <i class="material-symbols-outlined">place</i> {{ tr.getTourLocation(tour()!.id, tour()!.location) }}
+            </span>
+            <span class="meta-badge difficulty" [ngClass]="tour()!.difficulty">
+              <i class="material-symbols-outlined">terrain</i> {{ tr.getDifficultyLabel(tour()!.difficulty) }}
+            </span>
+            <span class="meta-badge">
+              <i class="material-symbols-outlined">group</i> {{ tr.t('tour.maxGroup') }} {{ tour()!.maxGroupSize || 16 }} {{ tr.t('tour.people') }}
+            </span>
+          </div>
+
+          <div class="rating-row">
+            <div class="stars">
+              @for (s of [1,2,3,4,5]; track s) {
+                <i class="material-symbols-outlined star-fill">star</i>
+              }
+            </div>
+            <strong>{{ tour()!.rating }}</strong>
+            <span class="review-count">({{ tour()!.reviewCount }} {{ tr.currentLang() === 'en' ? 'reviews' : 'opiniones' }})</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="info-section">
+          <h2>
+            <i class="material-symbols-outlined">description</i>
+            {{ tr.t('detail.overview') }}
+          </h2>
+          <p class="description-text">{{ tour()!.description }}</p>
+        </div>
+
+        <!-- Itinerary -->
+        @if (itinerary().length > 0) {
+          <div class="info-section">
+            <h2>
+              <i class="material-symbols-outlined">route</i>
+              {{ tr.t('detail.itinerary') }}
+            </h2>
+            <div class="timeline">
+              @for (item of itinerary(); track $index) {
+                <div class="timeline-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-time">{{ item.time }}</div>
+                  <div class="timeline-body">
+                    <h4>{{ item.title }}</h4>
+                    <p>{{ item.desc }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Includes / Excludes -->
+        <div class="info-section inc-exc-grid">
+          <div class="inc-box">
+            <h3>
+              <i class="material-symbols-outlined text-emerald">check_circle</i>
+              {{ tr.t('detail.includes') }}
+            </h3>
+            <ul>
+              @for (inc of includes(); track $index) {
+                <li><i class="material-symbols-outlined">check</i> {{ inc }}</li>
+              }
+            </ul>
+          </div>
+          <div class="exc-box">
+            <h3>
+              <i class="material-symbols-outlined text-red">cancel</i>
+              {{ tr.t('detail.excludes') }}
+            </h3>
+            <ul>
+              @for (exc of excludes(); track $index) {
+                <li><i class="material-symbols-outlined">close</i> {{ exc }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Booking Sidebar -->
+      <aside class="booking-sidebar">
+        <div class="booking-card-sticky">
+          <div class="price-header">
+            <span class="price-label">{{ tr.t('tour.from') }}</span>
+            <span class="price-value">{{ formatPrice(tour()!.price) }}</span>
+            <span class="price-unit">{{ tr.t('tour.perPerson') }}</span>
+          </div>
+
+          <div class="trust-row">
+            <span><i class="material-symbols-outlined">verified</i> {{ tr.currentLang() === 'en' ? 'Instant Confirmation' : 'Confirmación inmediata' }}</span>
+            <span><i class="material-symbols-outlined">lock</i> {{ tr.currentLang() === 'en' ? 'Secure Booking' : 'Pago seguro' }}</span>
+          </div>
+
+          @if (bookingSuccess()) {
+            <div class="booking-success">
+              <i class="material-symbols-outlined success-icon">task_alt</i>
+              <h3>{{ tr.t('book.successTitle') }} #{{ lastBookingId() }}</h3>
+              <p>
+                {{ tr.currentLang() === 'en'
+                  ? 'We have received your reservation. We will contact you immediately via WhatsApp.'
+                  : 'Hemos recibido tu reserva. Nos pondremos en contacto contigo vía WhatsApp.'
+                }}
+              </p>
+              <a [href]="getWhatsAppUrl()" target="_blank" class="btn btn-whatsapp btn-full">
+                <i class="material-symbols-outlined">chat</i>
+                {{ tr.t('book.btnWhatsApp') }}
+              </a>
+            </div>
+          } @else {
+            <form class="booking-form" (ngSubmit)="submitBooking()">
+              <div class="form-group">
+                <label><i class="material-symbols-outlined icon-xs">calendar_month</i> {{ tr.t('book.date') }}</label>
+                <input type="date" [(ngModel)]="bookingForm.travelDate" name="travelDate" required />
+              </div>
+
+              <div class="form-group">
+                <label><i class="material-symbols-outlined icon-xs">group</i> {{ tr.t('book.people') }}</label>
+                <input type="number" min="1" max="20" [(ngModel)]="bookingForm.numberOfPeople" name="numberOfPeople" required />
+              </div>
+
+              <div class="form-group">
+                <label><i class="material-symbols-outlined icon-xs">person</i> {{ tr.t('book.name') }}</label>
+                <input
+                  type="text"
+                  [(ngModel)]="bookingForm.clientName"
+                  name="clientName"
+                  [placeholder]="tr.currentLang() === 'en' ? 'Your full name' : 'Tu nombre completo'"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label><i class="material-symbols-outlined icon-xs">mail</i> {{ tr.t('book.email') }}</label>
+                <input type="email" [(ngModel)]="bookingForm.email" name="email" placeholder="you@email.com" required />
+              </div>
+
+              <div class="form-group">
+                <label><i class="material-symbols-outlined icon-xs">phone</i> {{ tr.t('book.phone') }}</label>
+                <input type="tel" [(ngModel)]="bookingForm.phone" name="phone" placeholder="+51 984..." required />
+              </div>
+
+              <div class="price-summary">
+                <div class="summary-line">
+                  <span>{{ formatPrice(tour()!.price) }} × {{ bookingForm.numberOfPeople }}</span>
+                  <strong>{{ formatPrice(calculateSubtotal()) }}</strong>
+                </div>
+                <div class="summary-total">
+                  <span>Total</span>
+                  <span class="total-value">{{ formatPrice(calculateSubtotal()) }}</span>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg btn-full" [disabled]="bookingSubmitting()">
+                @if (bookingSubmitting()) {
+                  <i class="material-symbols-outlined spin">sync</i> {{ tr.t('book.submitting') }}
+                } @else {
+                  <i class="material-symbols-outlined">send</i> {{ tr.t('book.btnConfirm') }}
+                }
+              </button>
+
+              <a [href]="getWhatsAppUrl()" target="_blank" class="btn btn-whatsapp-outline btn-full">
+                <i class="material-symbols-outlined">chat</i>
+                {{ tr.t('detail.inquireWa') }}
+              </a>
+            </form>
+          }
+        </div>
+      </aside>
+    </div>
+  </section>
+}
+
+<!-- Lightbox Modal -->
+@if (showLightbox()) {
+  <div class="lightbox-backdrop" (click)="closeLightbox()">
+    <button class="lightbox-close" (click)="closeLightbox()">
+      <i class="material-symbols-outlined">close</i>
+    </button>
+    <button class="lightbox-nav prev" (click)="$event.stopPropagation(); prevImage()">
+      <i class="material-symbols-outlined">chevron_left</i>
+    </button>
+    <div class="lightbox-img-wrap" (click)="$event.stopPropagation()">
+      <img [src]="galleryImages()[activeGalleryIndex()]" [alt]="'Foto ' + (activeGalleryIndex() + 1)" />
+      <div class="lightbox-counter">
+        {{ activeGalleryIndex() + 1 }} / {{ galleryImages().length }}
+      </div>
+    </div>
+    <button class="lightbox-nav next" (click)="$event.stopPropagation(); nextImage()">
+      <i class="material-symbols-outlined">chevron_right</i>
+    </button>
+  </div>
+}

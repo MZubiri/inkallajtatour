@@ -1,0 +1,167 @@
+<div class="admin-bookings-page animate-fade-in">
+  <div class="page-title-row">
+    <div>
+      <h1 class="page-title">Gestión de Reservas</h1>
+      <p class="page-subtitle">Revisa las solicitudes recibidas de la web, confirma vouchers y atiende requerimientos.</p>
+    </div>
+    <div class="filter-pills">
+      <button class="pill-btn" [class.active]="statusFilter() === 'all'" (click)="setStatusFilter('all')">
+        Todas ({{ bookings().length }})
+      </button>
+      <button class="pill-btn" [class.active]="statusFilter() === 'pending'" (click)="setStatusFilter('pending')">
+        Pendientes
+      </button>
+      <button class="pill-btn" [class.active]="statusFilter() === 'confirmed'" (click)="setStatusFilter('confirmed')">
+        Confirmadas
+      </button>
+      <button class="pill-btn" [class.active]="statusFilter() === 'cancelled'" (click)="setStatusFilter('cancelled')">
+        Canceladas
+      </button>
+    </div>
+  </div>
+
+  <div class="content-panel">
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+      </div>
+    } @else if (filteredBookings().length === 0) {
+      <div class="empty-state">
+        <i class="material-symbols-outlined empty-icon">event_busy</i>
+        <h3>No hay reservas con este filtro</h3>
+        <p>Cuando los viajeros reserven desde la web pública, aparecerán listadas aquí.</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cliente</th>
+              <th>Tour</th>
+              <th>Fecha de Viaje</th>
+              <th>Personas</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (b of filteredBookings(); track b.id) {
+              <tr>
+                <td><strong>#{{ b.id }}</strong></td>
+                <td>
+                  <div class="client-cell">
+                    <strong>{{ b.clientName }}</strong>
+                    <span>{{ b.email }} • {{ b.phone }}</span>
+                  </div>
+                </td>
+                <td>{{ b.tourName }}</td>
+                <td>{{ b.travelDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ b.numberOfPeople }} pax</td>
+                <td><strong>${{ b.totalPrice }} USD</strong></td>
+                <td>
+                  <span class="status-badge" [ngClass]="b.status">
+                    {{ b.status === 'pending' ? 'Pendiente' : (b.status === 'confirmed' ? 'Confirmado' : 'Cancelado') }}
+                  </span>
+                </td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn-icon view" (click)="viewDetail(b)" title="Ver detalle">
+                      <i class="material-symbols-outlined">visibility</i>
+                    </button>
+                    @if (b.status === 'pending') {
+                      <button class="btn-icon check" (click)="updateStatus(b.id, 'confirmed')" title="Confirmar">
+                        <i class="material-symbols-outlined">check</i>
+                      </button>
+                    }
+                    @if (b.status !== 'cancelled') {
+                      <button class="btn-icon cancel" (click)="updateStatus(b.id, 'cancelled')" title="Cancelar">
+                        <i class="material-symbols-outlined">close</i>
+                      </button>
+                    }
+                    <button class="btn-icon delete" (click)="deleteBooking(b.id)" title="Eliminar">
+                      <i class="material-symbols-outlined">delete</i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Booking Detail Modal -->
+@if (selectedBooking()) {
+  <div class="modal-backdrop" (click)="closeDetail()">
+    <div class="modal-card animate-fade-in" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Detalle de Reserva #{{ selectedBooking()!.id }}</h3>
+        <button class="btn-close" (click)="closeDetail()">
+          <i class="material-symbols-outlined">close</i>
+        </button>
+      </div>
+
+      <div class="detail-body">
+        <div class="detail-grid">
+          <div class="d-item">
+            <span class="d-label">Cliente</span>
+            <strong class="d-val">{{ selectedBooking()!.clientName }}</strong>
+          </div>
+          <div class="d-item">
+            <span class="d-label">Correo</span>
+            <strong class="d-val">{{ selectedBooking()!.email }}</strong>
+          </div>
+          <div class="d-item">
+            <span class="d-label">WhatsApp / Teléfono</span>
+            <strong class="d-val">{{ selectedBooking()!.phone }}</strong>
+          </div>
+          <div class="d-item">
+            <span class="d-label">País de Origen</span>
+            <strong class="d-val">{{ selectedBooking()!.country || 'No especificado' }}</strong>
+          </div>
+          <div class="d-item">
+            <span class="d-label">Tour Solicitado</span>
+            <strong class="d-val">{{ selectedBooking()!.tourName }}</strong>
+          </div>
+          <div class="d-item">
+            <span class="d-label">Fecha de Viaje</span>
+            <strong class="d-val">{{ selectedBooking()!.travelDate | date:'longDate' }}</strong>
+          </div>
+          <div class="d-item">
+            <span class="d-label">Cantidad de Pasajeros</span>
+            <strong class="d-val">{{ selectedBooking()!.numberOfPeople }} personas</strong>
+          </div>
+          <div class="d-item">
+            <span class="d-label">Monto Total Estimado</span>
+            <strong class="d-val text-gold-dark">${{ selectedBooking()!.totalPrice }} USD</strong>
+          </div>
+        </div>
+
+        <div class="d-notes">
+          <span class="d-label">Requerimientos o Notas del Cliente</span>
+          <p>{{ selectedBooking()!.specialRequests || 'Sin notas adicionales.' }}</p>
+        </div>
+
+        <div class="detail-status-row">
+          <span>Estado Actual:</span>
+          <span class="status-badge" [ngClass]="selectedBooking()!.status">
+            {{ selectedBooking()!.status }}
+          </span>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline" (click)="closeDetail()">Cerrar</button>
+          @if (selectedBooking()!.status !== 'confirmed') {
+            <button class="btn btn-primary" (click)="updateStatus(selectedBooking()!.id, 'confirmed')">
+              Aprobar y Confirmar Reserva
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

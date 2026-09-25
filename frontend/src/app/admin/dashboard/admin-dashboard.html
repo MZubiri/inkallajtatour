@@ -1,0 +1,135 @@
+<div class="dashboard-page animate-fade-in">
+  <div class="page-title-row">
+    <div>
+      <h1 class="page-title">Resumen General</h1>
+      <p class="page-subtitle">Monitorea en tiempo real las reservas, catálogo y solicitudes de clientes.</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-outline btn-sm" (click)="loadDashboardData()">
+        <i class="material-symbols-outlined">refresh</i>
+        <span>Actualizar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Cards Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-tours">
+        <i class="material-symbols-outlined">map</i>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Tours Activos</span>
+        <strong class="kpi-value">{{ stats().totalTours }}</strong>
+        <span class="kpi-trend">Catálogo completo</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-bookings">
+        <i class="material-symbols-outlined">book_online</i>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Total Reservas</span>
+        <strong class="kpi-value">{{ stats().totalBookings }}</strong>
+        <span class="kpi-trend highlight-yellow">{{ stats().pendingBookings }} pendientes</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-revenue">
+        <i class="material-symbols-outlined">payments</i>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Ingresos Confirmados</span>
+        <strong class="kpi-value">${{ stats().totalRevenue }} USD</strong>
+        <span class="kpi-trend highlight-green">Confirmado</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap icon-messages">
+        <i class="material-symbols-outlined">mail</i>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Consultas Web</span>
+        <strong class="kpi-value">{{ stats().totalMessages }}</strong>
+        <span class="kpi-trend highlight-red">{{ stats().unreadMessages }} sin leer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Bookings Table Section -->
+  <div class="content-panel">
+    <div class="panel-header">
+      <div>
+        <h3>Últimas Reservas Recibidas</h3>
+        <p>Gestiona y confirma solicitudes recientes de clientes</p>
+      </div>
+      <a routerLink="/admin/bookings" class="btn btn-outline btn-sm">Ver Todas</a>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+      </div>
+    } @else if (recentBookings().length === 0) {
+      <div class="empty-bookings-box">
+        <i class="material-symbols-outlined">event_busy</i>
+        <p>Aún no se han registrado reservas en el sistema.</p>
+        <span class="sub">Las reservas creadas desde la página pública aparecerán aquí al instante.</span>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Cliente</th>
+              <th>Tour Solicitado</th>
+              <th>Fecha</th>
+              <th>Pax</th>
+              <th>Total</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (b of recentBookings(); track b.id) {
+              <tr>
+                <td><strong>#{{ b.id }}</strong></td>
+                <td>
+                  <div class="client-cell">
+                    <strong>{{ b.clientName }}</strong>
+                    <span>{{ b.email }} • {{ b.phone }}</span>
+                  </div>
+                </td>
+                <td>{{ b.tourName }}</td>
+                <td>{{ b.travelDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ b.numberOfPeople }}</td>
+                <td><strong>${{ b.totalPrice }}</strong></td>
+                <td>
+                  <span class="status-badge" [ngClass]="b.status">
+                    {{ b.status === 'pending' ? 'Pendiente' : (b.status === 'confirmed' ? 'Confirmado' : 'Cancelado') }}
+                  </span>
+                </td>
+                <td>
+                  <div class="table-actions">
+                    @if (b.status === 'pending') {
+                      <button class="btn-icon check" (click)="updateBookingStatus(b.id, 'confirmed')" title="Aprobar y Confirmar">
+                        <i class="material-symbols-outlined">check</i>
+                      </button>
+                      <button class="btn-icon cancel" (click)="updateBookingStatus(b.id, 'cancelled')" title="Rechazar">
+                        <i class="material-symbols-outlined">close</i>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

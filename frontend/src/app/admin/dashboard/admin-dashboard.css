@@ -1,0 +1,266 @@
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.page-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  color: var(--secondary);
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* KPI Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.kpi-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: transform var(--transition-fast);
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.kpi-icon-wrap {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-icon-wrap i {
+  font-size: 28px;
+}
+
+.icon-tours {
+  background: #EFF6FF;
+  color: #2563EB;
+}
+
+.icon-bookings {
+  background: #FFFBEB;
+  color: #D97706;
+}
+
+.icon-revenue {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.icon-messages {
+  background: #FDF2F8;
+  color: #DB2777;
+}
+
+.kpi-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.kpi-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-light);
+  letter-spacing: 0.5px;
+}
+
+.kpi-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--secondary);
+  line-height: 1.2;
+}
+
+.kpi-trend {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.highlight-yellow {
+  color: #D97706;
+  font-weight: 600;
+}
+
+.highlight-green {
+  color: #059669;
+  font-weight: 600;
+}
+
+.highlight-red {
+  color: #DC2626;
+  font-weight: 600;
+}
+
+/* Content Panel */
+.content-panel {
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.panel-header h3 {
+  font-size: 1.2rem;
+  color: var(--secondary);
+  margin-bottom: 2px;
+}
+
+.panel-header p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Tables */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.admin-table th {
+  background: #F8FAFC;
+  padding: 12px 14px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748B;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table td {
+  padding: 14px;
+  border-bottom: 1px solid #F1F5F9;
+  color: #334155;
+}
+
+.client-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.client-cell span {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge.pending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.status-badge.confirmed {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.status-badge.cancelled {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.table-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.btn-icon.check {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.btn-icon.check:hover {
+  background: #10B981;
+  color: #FFFFFF;
+}
+
+.btn-icon.cancel {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.btn-icon.cancel:hover {
+  background: #EF4444;
+  color: #FFFFFF;
+}
+
+.empty-bookings-box {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-bookings-box i {
+  font-size: 40px;
+  color: #CBD5E1;
+  margin-bottom: 8px;
+}
+
+.empty-bookings-box .sub {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  display: block;
+  margin-top: 4px;
+}

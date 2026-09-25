@@ -1,0 +1,276 @@
+.admin-bookings-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  color: var(--secondary);
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.pill-btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+.pill-btn:hover {
+  background: #F1F5F9;
+}
+
+.pill-btn.active {
+  background: var(--secondary);
+  color: #FFFFFF;
+  border-color: var(--secondary);
+}
+
+.content-panel {
+  background: #FFFFFF;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.admin-table th {
+  background: #F8FAFC;
+  padding: 12px 14px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748B;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table td {
+  padding: 14px;
+  border-bottom: 1px solid #F1F5F9;
+  vertical-align: middle;
+}
+
+.client-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.client-cell span {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge.pending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.status-badge.confirmed {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.status-badge.cancelled {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.table-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.btn-icon.view {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.btn-icon.view:hover {
+  background: var(--secondary);
+  color: #FFFFFF;
+}
+
+.btn-icon.check {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.btn-icon.check:hover {
+  background: #10B981;
+  color: #FFFFFF;
+}
+
+.btn-icon.cancel {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.btn-icon.cancel:hover {
+  background: #EF4444;
+  color: #FFFFFF;
+}
+
+.btn-icon.delete {
+  background: #F1F5F9;
+  color: #94A3B8;
+}
+
+.btn-icon.delete:hover {
+  background: #DC2626;
+  color: #FFFFFF;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(7, 15, 30, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close {
+  color: #64748B;
+}
+
+.detail-body {
+  padding: 24px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.d-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.d-label {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.d-val {
+  font-size: 0.95rem;
+  color: var(--secondary);
+}
+
+.text-gold-dark {
+  color: var(--primary-dark);
+  font-size: 1.2rem;
+}
+
+.d-notes {
+  background: #F8FAFC;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+}
+
+.d-notes p {
+  font-size: 0.88rem;
+  color: #334155;
+  margin-top: 4px;
+}
+
+.detail-status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}

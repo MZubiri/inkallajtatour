@@ -1,0 +1,73 @@
+<div class="login-wrapper">
+  <div class="login-backdrop-glow"></div>
+  <div class="login-card glass-panel-dark animate-fade-in">
+    <div class="login-header">
+      <div class="login-logo-symbol">
+        <i class="material-symbols-outlined">wb_sunny</i>
+      </div>
+      <h2>Panel Administrativo</h2>
+      <p class="login-subtitle">Inkallajta Tour Perú • Gestión y Control</p>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="alert-error animate-fade-in">
+        <i class="material-symbols-outlined">error</i>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <!-- Demo Quick Access Banner -->
+    <div class="demo-helper-box">
+      <div class="demo-helper-text">
+        <i class="material-symbols-outlined icon-sm">key</i>
+        <span>Credenciales de demostración listas:</span>
+      </div>
+      <button type="button" class="btn-demo-fill" (click)="fillDemoCredentials()">
+        Autocompletar Admin
+      </button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label><i class="material-symbols-outlined icon-xs">mail</i> Correo Electrónico</label>
+        <input
+          type="email"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          name="email"
+          placeholder="admin@inkallajtatour.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label><i class="material-symbols-outlined icon-xs">lock</i> Contraseña</label>
+        <input
+          type="password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          name="password"
+          placeholder="••••••••"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-full" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <i class="material-symbols-outlined spin">sync</i>
+          <span>Autenticando...</span>
+        } @else {
+          <i class="material-symbols-outlined">login</i>
+          <span>Iniciar Sesión</span>
+        }
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <a routerLink="/" class="back-link">
+        <i class="material-symbols-outlined">arrow_back</i>
+        <span>Volver a la Página Pública</span>
+      </a>
+    </div>
+  </div>
+</div>

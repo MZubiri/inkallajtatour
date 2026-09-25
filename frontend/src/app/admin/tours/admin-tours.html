@@ -1,0 +1,185 @@
+<div class="admin-tours-page animate-fade-in">
+  <div class="page-title-row">
+    <div>
+      <h1 class="page-title">Gestión de Tours y Circuitos</h1>
+      <p class="page-subtitle">Administra los paquetes turísticos visibles en la web pública.</p>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-primary" (click)="openCreateModal()">
+        <i class="material-symbols-outlined">add_circle</i>
+        <span>Nuevo Tour</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content-panel">
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Tour</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Duración</th>
+              <th>Dificultad</th>
+              <th>Destacado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of tours(); track t.id) {
+              <tr>
+                <td>
+                  <div class="tour-cell">
+                    <img [src]="t.imageUrl" [alt]="t.title" class="tour-thumb" />
+                    <div>
+                      <strong>{{ t.title }}</strong>
+                      <span class="sub-slug">{{ t.slug }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge badge-navy">{{ t.categoryName }}</span>
+                </td>
+                <td><strong>${{ t.price }} USD</strong></td>
+                <td>{{ t.duration }}</td>
+                <td>
+                  <span class="diff-chip" [ngClass]="t.difficulty">{{ t.difficulty }}</span>
+                </td>
+                <td>
+                  @if (t.isFeatured) {
+                    <span class="badge badge-gold">Sí</span>
+                  } @else {
+                    <span class="badge">No</span>
+                  }
+                </td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn-icon edit" (click)="openEditModal(t)" title="Editar Tour">
+                      <i class="material-symbols-outlined">edit</i>
+                    </button>
+                    <button class="btn-icon delete" (click)="deleteTour(t.id, t.title)" title="Eliminar Tour">
+                      <i class="material-symbols-outlined">delete</i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Modal Create / Edit Tour -->
+@if (showModal()) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-card animate-fade-in" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ isEditing() ? 'Editar Tour' : 'Crear Nuevo Tour' }}</h3>
+        <button class="btn-close" (click)="closeModal()">
+          <i class="material-symbols-outlined">close</i>
+        </button>
+      </div>
+
+      <form (ngSubmit)="saveTour()" class="modal-form">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Título del Tour *</label>
+            <input
+              type="text"
+              [(ngModel)]="tourForm.title"
+              (ngModelChange)="generateSlug()"
+              name="title"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Slug URL *</label>
+            <input type="text" [(ngModel)]="tourForm.slug" name="slug" required />
+          </div>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Categoría</label>
+            <select [(ngModel)]="tourForm.categoryId" name="categoryId">
+              @for (c of categories(); track c.id) {
+                <option [ngValue]="c.id">{{ c.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Precio (USD) *</label>
+            <input type="number" [(ngModel)]="tourForm.price" name="price" required />
+          </div>
+          <div class="form-group">
+            <label>Duración</label>
+            <input type="text" [(ngModel)]="tourForm.duration" name="duration" placeholder="Ej: 1 día" />
+          </div>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Dificultad</label>
+            <select [(ngModel)]="tourForm.difficulty" name="difficulty">
+              <option value="easy">Fácil</option>
+              <option value="moderate">Moderado</option>
+              <option value="hard">Exigente</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Ubicación</label>
+            <input type="text" [(ngModel)]="tourForm.location" name="location" />
+          </div>
+          <div class="form-group">
+            <label>Destacado en Home</label>
+            <select [(ngModel)]="tourForm.isFeatured" name="isFeatured">
+              <option [ngValue]="true">Sí</option>
+              <option [ngValue]="false">No</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>URL de Imagen Principal</label>
+          <input type="url" [(ngModel)]="tourForm.imageUrl" name="imageUrl" />
+        </div>
+
+        <div class="form-group">
+          <label>Descripción Corta (Vista de Tarjeta)</label>
+          <textarea [(ngModel)]="tourForm.shortDescription" name="shortDescription" rows="2"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción Completa</label>
+          <textarea [(ngModel)]="tourForm.description" name="description" rows="3"></textarea>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Qué incluye (separar por coma)</label>
+            <textarea [(ngModel)]="tourForm.includes" name="includes" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Qué no incluye (separar por coma)</label>
+            <textarea [(ngModel)]="tourForm.excludes" name="excludes" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            {{ isEditing() ? 'Actualizar Tour' : 'Guardar Tour' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

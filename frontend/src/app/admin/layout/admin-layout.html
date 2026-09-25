@@ -1,0 +1,70 @@
+<div class="admin-shell">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo-icon">
+        <i class="material-symbols-outlined">wb_sunny</i>
+      </div>
+      <div class="sidebar-brand-text">
+        <span class="title">INKALLAJTA</span>
+        <span class="sub">Panel Admin</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-btn">
+        <i class="material-symbols-outlined">dashboard</i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/tours" routerLinkActive="active" class="nav-btn">
+        <i class="material-symbols-outlined">map</i>
+        <span>Tours y Paquetes</span>
+      </a>
+      <a routerLink="/admin/bookings" routerLinkActive="active" class="nav-btn">
+        <i class="material-symbols-outlined">book_online</i>
+        <span>Reservas</span>
+      </a>
+      <a routerLink="/admin/messages" routerLinkActive="active" class="nav-btn">
+        <i class="material-symbols-outlined">mail</i>
+        <span>Mensajes</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a routerLink="/" class="nav-btn btn-exit" title="Ir a la web de clientes">
+        <i class="material-symbols-outlined">travel_explore</i>
+        <span>Ver Web Pública</span>
+      </a>
+      <button class="nav-btn btn-logout" (click)="logout()" title="Cerrar sesión">
+        <i class="material-symbols-outlined">logout</i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="admin-main">
+    <!-- Topbar -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <h2>Panel de Control Inkallajta Tour</h2>
+      </div>
+      <div class="topbar-right">
+        <div class="admin-user-badge">
+          <div class="user-avatar">
+            {{ auth.currentUser()?.fullName?.charAt(0) || 'A' }}
+          </div>
+          <div class="user-meta">
+            <strong>{{ auth.currentUser()?.fullName || 'Administrador' }}</strong>
+            <span>{{ auth.currentUser()?.email }}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Nested Route Content -->
+    <main class="admin-page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
